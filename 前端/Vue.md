@@ -927,17 +927,172 @@
 - X
 - 轮播图组件：Swiper6
 
-
+- 图片懒加载：vue-lazyload
 
 
 
 ### 6. Vue3
 
-- 暂时放着吧，我先玩玩2
+#### 6.1 Vue3 初始化
 
+- 版本：4.5以上
 
+- 创建：
 
+  - npm创建方式和vue2一样
 
+  - vite创建：
+
+    - ```shell
+      ## 创建工程
+      npm init vite-app <projetc-name>
+      ## 进入工程目录
+      cd <project-name>
+      ## 安装依赖
+      npm install 
+      ## 运行
+      npm run dev
+      ```
+
+#### 6.2 常用CompositionAPI
+
+##### 6.2.1 setup
+
+- Vue3 的一个新配置项，值为一个函数
+- setup是所有CompositionAPI表演的舞台
+- 组件中所用到的：数据、方法等，均要配置在setup中
+- setup函数的两种返回值：
+  - ==若返回一个对象，则对象中的属性、方法，在模板中均可直接使用==
+  - 若返回一个渲染函数，则可以自定义渲染内容
+
+##### 6.2.2 ref函数（对象和属性都可以用，但是不推荐修饰对象）
+
+- 作用：定义一个响应式的数据
+
+- 如果属性更改后，想实时的展示到页面上，需要响应式数据
+
+- ```js
+  import {ref} from 'vue';
+  setup() {
+      let name = ref("张三");
+      let age = ref(18);
+      let job = ref({
+          type: "后端",
+          salary: "30K",
+      });
+      
+      function changeInfo() {
+          name.value = "李四";
+          age.value = 30;
+          job.value.type = "UI";
+          job.value.salary = "60K";
+      }
+  }
+  
+  // 模板中读取的时候，不需要写value
+
+##### 6.2.3 reactive 函数（用在对象和数组上）
+
+- 定义一个对象类型的响应式数据
+
+- ```js
+  setup() {
+      ley job = reactive({
+         type: "前端工程师",
+         salsry: "30K",
+      });
+      function changeInfo() {
+          job.type = "直接修改即可";
+      }
+  }
+  ```
+
+##### 6.2.4 Vue3的响应式
+
+- 实现原理：
+
+  - 通过Proxy代理：拦截对象中任意属性的变化，包括：属性的读写、属性的添加、属性的删除等
+
+  - 通过Reflect反射：对源对象的属性进行操作
+
+    ```js
+    new Proxy(data, {
+        // 拦截读取属性值
+        get(target, prop) {
+            return Reflect.get(target, prop);
+        },
+        // 拦截设置属性值  或  添加新属性
+        set(target, prop, value) {
+            return Reflect.deleteProperty(target, prop, value);
+        },
+        // 拦截删除属性
+        deleteproperty(target, prop) {
+            return Reflect.deleteProperty(target, prop);
+        }
+    })
+    ```
+
+##### 6.2.5 计算属性
+
+- 和Vue2.X中computed配置功能一致
+
+  ```js
+  setup() {
+      ...
+      let fullName = computed(() => {
+          return person.firstName + '-' + person.lastName;
+      })
+      // 完整写法
+      person.fullName = computer({
+          get() {
+              
+          },
+          set(value) {
+              const nameArr = value.split('-');
+              person.firstName = nameArr[0];
+              person.lastName = nameArr[1];
+          }
+      })
+  }
+  ```
+
+##### 6.2.6 监视
+
+- 和Vue2.X中watch配置功能一致
+
+  ```js
+  setup() {
+      watch(sum, (newValue, oldValue) => {
+          console.log(`变了`);
+      }, {immediate: true});
+      watch([sum, msg], (oldValue, newValue) => {
+          console.log();
+      });
+      // 监视reactive定义的一个响应式数据，会无法正确获取到oldValue
+      watch(person.value, (newValue, oldValue) => {
+          console.log(`获取不到oldValue了`);
+      })
+  }
+  ```
+
+- 两个小坑：
+  1. 监视reactive定义的响应式数据时，oldValue无法正确获取，强制开启了深度监视（deep配置失效）
+  2. 监视reactive定义的响应式数据中某个属性时：deep属性有效
+
+- watchEffect：回调函数中用了哪个属性，就监视哪些属性，并且是可以嵌套的
+
+  ```js
+  watchEffect(() => {
+      sum.value;
+      console.log(`回调`);
+  })
+  ```
+
+  - **==这个属性就是可以实现前端一直向后端传递数据的行为，只要数据改变了就向后端发送请求，无敌啦！！！==**
+
+##### 6.2.7 自定义hook函数
+
+- 
 
 ### 7. 性能优化
 
@@ -945,10 +1100,6 @@
 
 - 节流：在规定的间隔时间范围内不会重复触发回调，只有大于这个时间间隔才会触发回调，把频繁触发变为少量触发。
 - 防抖：前面的所有触发都被取消，最后一次执行在规定的时间之后才会触发，也就是说如果连续快速的触发，只会执行一次。
-
-
-
-
 
 
 
