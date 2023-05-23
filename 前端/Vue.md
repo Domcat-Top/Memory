@@ -1092,7 +1092,83 @@
 
 ##### 6.2.7 自定义hook函数
 
-- 
+- 把setup函数中的数据、方法、方法体等进行了封装，封装到一个JS文件里面，需要的地方直接引用，可以得到自己想要的数据，减少了代码的冗余
+
+  ```js
+  import {reavtive} from 'vue';
+  export default function() {
+      let point = reactive({
+         x: 0,
+         y: 0,
+      });
+      
+      // 下面可以写一些方法，操作这些数据的
+      
+      
+      // 最后吧得到的处理后的数据返回，因为要用
+      return point;
+  }
+  
+  
+  // 在使用的地方
+  import usePoint from '../hook/usePoint'
+  
+  setup() {
+      // 获取到处理逻辑后的数据
+      let ponit = usePoint();
+  }
+  ```
+
+##### 6.2.8 toRef（个人观点是没多大用）
+
+- 作用：创建一个ref对象，其value值指向另一个对象中的某个属性
+- 语法：`const name = toRef(person, 'name');`
+- 应用：要将响应式对象中的某个数据单独提供给外部使用时
+- 拓展：`toRefs`和`toRef`功能一直，但可以批量创建多个ref对象
+
+#### 6.3 其他的CompositionApi（了解）
+
+##### 6.3.1 shallowReactive
+
+- 浅层次的reactive：只处理对象的第一层，第二层都不处理
+
+  ```js
+  let person = shallowReactive({
+      name: '张三',
+      age: 16,
+      job: {
+          j1: {
+              salary: 30
+          }
+      }
+  })
+  ```
+
+##### 6.3.2 shallowRef
+
+- 浅层次的ref：如果传入的是基本数据类型，如shallowRef(0)，那么继续生效，如果传入的是shallowRef({y: 0})，那么不会生效了
+
+##### 6.3.3 readonly 和 shallowReadonly
+
+- person = readonly(person);    当前对象的所有属性都不允许改变
+
+- person = shallowReadonly(person); 当前对象的第一层数据不允许更改，其它层的数据是允许更改的
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### 7. 性能优化
 
