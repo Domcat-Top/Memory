@@ -400,19 +400,20 @@
     }
     ```
 
-  #### 2.15 Vue插件库
 
-  - 安装：`npm i vue-resource `
+#### 2.15 Vue插件库
 
-  - 使用：
+- 安装：`npm i vue-resource `
 
-    ```js
-    import vueResource from "vue-resource";
-    // 使用插件
-    Vue.use(vueResource);
-    ```
+- 使用：
 
-  - 插件库在VC和VM身上装了很多的方法，类似Java的工具类，直接调用即可，是对其他库的二次封装
+  ```js
+  import vueResource from "vue-resource";
+  // 使用插件
+  Vue.use(vueResource);
+  ```
+
+- 插件库在VC和VM身上装了很多的方法，类似Java的工具类，直接调用即可，是对其他库的二次封装
 
 #### 2.16 插槽
 
@@ -924,12 +925,10 @@
 
 ### 5. UI组件库
 
-- X
+- 这里只记录一下用的多的，相对开放的
 - 轮播图组件：Swiper6
-
 - 图片懒加载：vue-lazyload
-
-
+- 进度条UI：nprogress
 
 ### 6. Vue3
 
@@ -1170,9 +1169,9 @@
   </teleport>
   ```
 
-##### 6.4.3 Suspense（异步）
+##### 6.4.3 Suspense（异步指定）
 
-- 没学会，今夕是何年？
+- **今夕是何年？前端都开始异步了？**
 
 - 结束！
 

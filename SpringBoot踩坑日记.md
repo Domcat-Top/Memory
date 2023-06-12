@@ -25,24 +25,6 @@
 - 当配置类中的方法存在这个注解时，这个注解会将方法的返回值放入到`IOC`容器中
 - 当@Bean标注的方法中有参数的时候，一般会和`@Qualifier（"beanId"）`一起使用，会去IOC容器中寻找该类型的Bean作为参数注入进该方法中
 
-#### 5. git初始化项目以及项目绑定（忘记了）
-
-- 创建github仓库
-
-- 对应文件夹打开隐藏文件，删除.git文件
-
-- 终端执行命令：
-
-  ```shell
-  - git init 
-  - git remote add origin 仓库地址
-  - git add .
-  - git commit -m "init project"
-  - git push origin master  # 执行这一步以后，会弹出绑定框，让你绑定github账户
-  - git push origin master
-  # 至此，大功告成
-  ```
-
 
 
 
