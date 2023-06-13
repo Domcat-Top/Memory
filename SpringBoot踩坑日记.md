@@ -52,6 +52,8 @@
           </dependency>
   ```
 
+- PageHelper写到查询的上一句即可，也没其他要求了
+
 - mapperScan扫描的是包，不是类。。。
 
 - 配置文件配置一下xml的路径即可，没别的了
