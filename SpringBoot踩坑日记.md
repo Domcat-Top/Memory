@@ -33,6 +33,29 @@
 
 - 直接在设计表中设计的话，会出现转义问题
 
+#### 6. SpringBoot整合Mybatis-plus和PageHelper（猪脑子忘了）
+
+- 一定注意版本，版本冲突了，死活报错，甚至出现环形依赖，那就彻底寄咯
+
+- ```xml
+          <!--mybatis-plus 持久层-->
+          <dependency>
+              <groupId>com.baomidou</groupId>
+              <artifactId>mybatis-plus-boot-starter</artifactId>
+              <version>3.5.1</version>
+          </dependency>
+          <!--   分页插件-->
+          <dependency>
+              <groupId>com.github.pagehelper</groupId>
+              <artifactId>pagehelper-spring-boot-starter</artifactId>
+              <version>1.4.3</version>
+          </dependency>
+  ```
+
+- mapperScan扫描的是包，不是类。。。
+
+- 配置文件配置一下xml的路径即可，没别的了
+
 
 
 B站图床搭建，原理貌似是利用了B站动态，但是不予说明，个人感觉还是用Tomcat的cdn开放
