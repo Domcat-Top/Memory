@@ -953,6 +953,16 @@
       npm run dev
       ```
 
+- vue + vite + ts
+
+  - ```powershell
+    npm create vite
+    # 输入项目名字
+    # 选择框架
+    # 选择语法：ts
+    # install
+    ```
+
 #### 6.2 常用CompositionAPI
 
 ##### 6.2.1 setup

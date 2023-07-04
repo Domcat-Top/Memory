@@ -467,10 +467,436 @@
 
 - 字体的复合属性有要求：
   - 最后一位是 字体的名称，倒数第二位是 字体的大小
-
 - 非重要的不写了，看代码吧
 
+### 11. CSS3
 
+#### 11.1 新增单位
+
+- vw：视口宽度的百分比
+
+  ```html
+  width: 50vw;
+  ```
+
+- vh：视口高度的百分比
+
+- vmax：宽或高的最大值，哪个大，它就是哪个
+- vmin：宽或高的最小值
+
+#### 11.2 新增选择器
+
+- 讲过了
+
+#### 11.3 新增盒子模型
+
+- 扩张主义：content-box
+
+- 压缩主义：border-box
+
+- resize：可以给盒子调整大小了，但是需要和overflow配合使用
+
+- box-shadow：最少写两个参数，一个水平，一个垂直，表示出现盒子的阴影
+
+  ```html
+  - 第一个参数：水平距离
+  - 第二个参数：垂直距离
+  - 第三个参数：可以设置颜色，也可以设置阴影的模糊程度（px设置）
+  - 第四个参数：设置阴影颜色
+  - 第五个参数：阴影的外延
+  - 第六个参数：内阴影，阴影在里面
+              水平阴影的位置 垂直	    可选（模糊的距离） 可选（模糊的外延值）	可选（外阴改为内阴）
+  box-shadow: h-shadow    v-shadow blur 			 spread 			color   inset;
+  ```
+
+- opacticy：调整整个盒子以及盒子中内容的透明度
+
+#### 11.4 新增背景属性
+
+- background-origin：content-box，从内容区开始铺图
+- background-origin：padding-box，从padding区开始铺图
+
+- background-clip：对背景图修剪，border-box、padding-box、content-box
+- background-size：contain、cover
+
+#### 11.5 新增边框属性
+
+- border-radius：设置圆角，可以把盒子变为圆形
+- border-top-left-radius：左上角变为圆形，其他三个角同理，还可以设置两个参数，变为椭圆啥的
+
+#### 11.6 新增文本属性
+
+- 文本阴影：text-shadow
+
+- 文本换行：
+
+  ```html
+  white-space：pre按原文显示，超出也不换行
+              pre-wrap超出换行
+              pre-line左右空格删除，会换行
+              nowrap不换行
+  ```
+
+- 文本溢出：overflow的值必须设置为visible
+
+  ```html
+  text-overflow:clip  文本超出暴力截掉
+  ellipsis，文本超出的话，用三个点占位
+  ```
+
+- 文本修饰：text-decoration：overline dashed blue
+
+- 文本描边：webkit浏览器支持，需要的话百度
+
+#### 11.7 渐变
+
+##### 11.7.1 线性渐变
+
+- ```html
+  background-image: linear-gradient(从什么颜色，变到什么颜色，再到什么颜色);
+  
+  // 指定方向
+  background-image: linear-gradient(to right, red, yellow, green)
+  background-image: linear-gradient(to right top, red, yellow, green);
+  
+  // 角度---偏离中心轴
+  background-image: linear-gradient(20deg, red, yellow, green)
+  
+  // 渐变的宽度
+  background-image: linear-gradient(20deg, red 50px, yellow 50px, green 50px)
+  ```
+
+##### 11.7.2 径向渐变
+
+- ```html
+  // 由中心点四散
+  background-image: radial-gradient(从什么颜色，变到什么颜色，再到什么颜色);
+  
+  // 指定起始位置
+  background-image: radial-gradient(at right top, 从什么颜色，变到什么颜色，再到什么颜色);
+  // 指定起始位置
+  background-image: radial-gradient(at 100px 50px, 从什么颜色，变到什么颜色，再到什么颜色);
+  background-image: radial-gradient(circle, 从什么颜色，变到什么颜色，再到什么颜色);
+  // 渐变区域
+  background-image: radial-gradient(red 50px, yellow 50px, green 50px)
+  ```
+
+##### 11.7.3 重复渐变
+
+- 在没有发生渐变的区域，发生渐变
+
+- ```html
+  background-image: repeating-linear-gradient(从什么颜色，变到什么颜色，再到什么颜色);
+  ```
+
+#### 11.8 web字体
+
+- ```html
+  @font-face {
+  	font-family: "fontName";
+  	src: url(引入路径，本地或网络);
+  }
+  h1 {
+  	font-family: "fontName";
+  }
+  ```
+
+- 在线定制特定字的网站：
+
+  - www.iconfont.cn/webfont
+  - 对于你需要的字，生成相应的字的文件
+  - 全部引入当前页面
+  - 粘贴demo.html中的font-face中的配置
+
+#### 11.9 变换（旋转放大啥的）
+
+- 2D变换
+
+  - 位移：transform: translate(50px, 50px);
+
+  - 缩放：transform: scale(1.5);
+  - 旋转：transform: rotateZ(30edg);
+  - 扭曲：transform: skewX(30deg, 30deg);
+  - 多重变换：transform: translate(100px, 100px) scale(0.5);
+  - 设置旋转的原点：transform-origin: 50px 50px;
+
+- 3D：想实现3D效果，首先要找到父元素，开启3D空间
+
+  - ```html
+                /* 开启3D空间 */
+                transform-style: preserve-3d;
+                /* 设置景深，才能看到3D效果 */
+                perspective: 500px;
+    ```
+
+  - 景深：设置透视点的位置
+
+    ```html
+    			/* 设置透视点的位置 */
+                perspective-origin: 100px 100px;
+    ```
+
+  - 位移：
+
+    ```html
+                /* 根据景深定的，超过景深的话，当前平面就跑到脑后去了 */
+                transform: translateZ(400px);
+    ```
+
+  - 旋转：
+
+    ```html
+                transform: rotateX(45deg);
+    ```
+
+#### 11.10 过渡
+
+- 基本使用：
+
+  - ```html
+    // 设置哪个属性需要过渡效果
+    transition-preperty: height, width;
+    // 设置过渡的时间
+    transition-duration: 1s;
+    ```
+
+  - 可以过渡的属性：属性可以用数字、百分比之类的表示，则可以使用过渡
+
+- 高级使用：
+
+  - ```html
+    // 过渡的延迟
+    transition-delay: 2s;
+    // 平滑过渡
+    transition-timing-function: ease;
+    // 匀速过度
+    transition-timing-function: linear;
+    // 先慢后快
+    transition-timing-function: ease-in;
+    // 先快后慢
+    transition-timing-function: ease-out;
+    // 慢快慢
+    transition-timing-function: ease-in-out;
+    // 直接到达终点，不考虑过渡的时间
+    transition-timing-function: step-start;
+    // 时间结束后直接到终点
+    transition-timing-function: step-end;
+    // 一步一步到终点：分步过渡
+    transition-timing-function: steps(20 ,start);
+    // 贝塞尔曲线---可以做一个橡皮经的效果
+    transition-timing-function: 贝塞尔曲线公式
+    ```
+
+  - 复合属性：没啥记的
+
+#### 11.11 动画
+
+- 基本使用：
+
+  - ```html
+    // 应用动画
+    animation-name: cartoonName;
+    // 动画持续时间
+    animation-duration: 3s;
+    
+    // 定义一组关键帧（定义一个动画）
+    @keyframes cartoonName {
+    	// 第一帧
+    	from {
+    		
+    	}
+    	// 最后一帧
+    	to {
+    		// 移动900px
+    		transform: translate(900px);
+    	}
+    }
+    
+    // 第二种写法
+    @ketframes cartoonName {
+    	// 第一帧
+    	0% {
+    		
+    	}
+    	50% {
+    
+    	}
+    	// 最后一帧
+    	100% {
+    		// 移动900px
+    		transform: translate(900px);
+    	}
+    }
+    ```
+
+- 其他属性：
+
+  - ```html
+    // 设置动画的方式
+    animation-timing-function: linear;
+    // 动画播放的次数
+    animation-iteration-count: infinite;
+    // 动画的方向---参数很多，都只写了一个，可以百度
+    animation-direction: alternate;
+    // 动画以外的状态(不发生动画的时候在哪里)---可以设置为初始值、末尾值
+    animation-fill-mode: forwards;
+    // 动画的播放状态
+    animation-play-state: pause;
+    ```
+
+- 动画和过渡的区别：
+
+  - 过渡需要触发条件，动画不需要触发条件
+  - 动画有关键帧，还可以操作中间状态，过渡不可以，只有始末状态
+
+#### 11.12 多列布局
+
+- ```html
+  // 指定列数
+  column-count: 5
+  // 指定宽度，自动计算列数
+  column-width: 250px;
+  // 调整列间距
+  column-gap: 20px;
+  // 边框样式
+  column-rule-style: dashed;
+  column-rule-color: red;
+  column-rule-width: 2px;
+  ```
+
+#### **==11.13 伸缩盒模型==**
+
+- ```html
+  // 把该元素变为伸缩容器---开启了flex布局
+  display: flex;
+  // 实现多个容器并排了，但是中间有一个缝，尽量不用这个
+  display: inline-flex;
+  ```
+
+- 主轴方向：
+
+  - ```html
+    // 调整主轴的方向，水平从右到左
+    flex-direction: row-reverse;
+    ```
+
+  - **主轴默认是从左到右的**
+
+- 主轴上的换行方式：
+
+  - ```html
+    flex-wrap: wrap;
+    ```
+
+- 主轴的对齐方式：
+
+  - ```html
+    // 主轴的对齐方式，默认为主轴的起始位置
+    justify-content: flex-start;
+    // 从右排
+    justify-content: flex-end;
+    // 居中
+    justify-content: center;
+    // 项目均匀的分布在一行中
+    justify-content: space-around;
+    // 项目与项目之间的距离是相等的，并且在两边没距离
+    justify-content: space-between;
+    // 均匀的分布在一行中
+    justify-content: space-evenly;
+    ```
+
+- 侧轴对齐方式：
+
+  - 一行：
+
+    - ```html
+      // 侧轴的起始位置对齐
+      align-items: flex-start;
+      align-items: center;
+      align-items: flex-end;
+      // 基线对齐
+      align-items: basline;
+      // 拉伸对齐-所有的伸缩项目都没给高度，才会生效
+      align-items: stretch;
+      ```
+
+  - 多行：
+
+    - ```html
+      // 侧轴的起始位置对齐
+      align-content: flex-start;
+      // 结束位置对齐
+      align-content: flex-end;
+      // 中间位置对齐
+      align-content: center;
+      // 伸缩项目之间的距离是相等，并且是中间距离的二倍
+      align-content: space-around;
+      // 伸缩项目之间的距离是相等的，且边缘没有距离
+      align-content: space-between;
+      // 伸缩项目之间的距离是相等的
+      align-content: space-evenly;
+      // 拉伸--项目没给高度才有效
+      align-content: stretch;
+      ```
+
+##### 11.13.1 元素的水平垂直居中
+
+- ```html
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  ```
+
+##### 11.13.2 基准长度
+
+- ```html
+  // 根据主轴的方向，设置伸缩项目的基准长度
+  flex-basis: 300px;
+  ```
+
+#### 11.14 伸缩性
+
+- 伸：数字控制的是比例，权重
+  - flex-grow: 1;
+
+- 缩：它的权重是按照整体计算的
+  - flex-shrink: 1;
+
+#### 11.15 排序问题和单独对齐（了解）
+
+- ```html
+  order:1;
+  ```
+
+- 自身单独对齐：
+
+  - ```html
+    align-self: center;
+    ```
+
+#### 11.16 响应式布局
+
+- 媒体查询：
+  - 根据当前的窗口，来做出相应的操作，比如说在手机上和电脑上做出不同的显示
+
+
+
+
+
+BFC
+
+
+
+
+
+### 12. 动画库
+
+- Hover.css
+- Animate.css
+- Magic官网
+- csshake
+- hint.css
+- kite
 
 
 
