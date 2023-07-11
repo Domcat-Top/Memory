@@ -33,7 +33,7 @@
 
 - 直接在设计表中设计的话，会出现转义问题
 
-#### 6. SpringBoot整合Mybatis-plus和PageHelper（猪脑子忘了）
+#### 6. SpringBoot整合Mybatis-plus和PageHelper
 
 - 一定注意版本，版本冲突了，死活报错，甚至出现环形依赖，那就彻底寄咯
 
@@ -58,7 +58,20 @@
 
 - 配置文件配置一下xml的路径即可，没别的了
 
+#### 7. Mybatis-plus驼峰转下划线
 
+- 数据库字段用驼峰的话，在使用中，它会默认帮你转为下划线字段，如果实体类没有进行下划线定义，会报错
+
+- 添加如下配置：
+
+  ```yaml
+  mybatis-plus:
+    configuration:
+      # 关闭驼峰和下划线互转
+      map-underscore-to-camel-case: false
+  ```
+
+  
 
 B站图床搭建，原理貌似是利用了B站动态，但是不予说明，个人感觉还是用Tomcat的cdn开放
 
