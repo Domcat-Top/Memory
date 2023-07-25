@@ -71,7 +71,27 @@
       map-underscore-to-camel-case: false
   ```
 
-  
+
+#### 7. Window删除服务
+
+1. Dos删除
+   - 管理员打开Dos
+   - 执行命令：`sc delete ServiceName`
+2. 修改注册表进行删除/卸载服务：
+   - 运行执行`regedit`，打开注册表
+   - 找到`HKEY_LOCAL_MACHINESYSTEMCurrentControlSetService`，删除对应的键值
+
+
+
+
+
+
+
+
+
+
+
+
 
 B站图床搭建，原理貌似是利用了B站动态，但是不予说明，个人感觉还是用Tomcat的cdn开放
 
