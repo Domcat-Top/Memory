@@ -35,7 +35,7 @@
 
 #### 6. SpringBoot整合Mybatis-plus和PageHelper
 
-- 一定注意版本，版本冲突了，死活报错，甚至出现环形依赖，那就彻底寄咯
+- 一定注意版本，版本冲突了，死活报错，甚至出现环形依赖，那就彻底寄了
 
 - ```xml
           <!--mybatis-plus 持久层-->
@@ -54,7 +54,7 @@
 
 - PageHelper写到查询的上一句即可，也没其他要求了
 
-- mapperScan扫描的是包，**不是类**，下次写错的是猪
+- mapperScan扫描的是包，**不是类**，下次写错了是猪
 
 - 配置文件配置一下xml的路径即可，没别的了
 
@@ -72,7 +72,7 @@
   ```
 
 
-#### 7. Window删除服务两种方式
+#### 8. Window删除服务两种方式
 
 1. Dos删除
    - 管理员打开Dos
@@ -81,7 +81,7 @@
    - 运行执行`regedit`，打开注册表
    - 找到`HKEY_LOCAL_MACHINESYSTEMCurrentControlSetService`，删除对应的键值
 
-#### 8. Token验证登录逻辑流程
+#### 9. Token验证登录逻辑流程
 
 1. 客户端使用账号密码请求登录
 2. 服务端收到请求，去验证用户名和密码
@@ -90,9 +90,94 @@
 5. 客户端每次向服务端请求资源都需要携带服务端签发的Token
 6. 服务端收到请求后，去验证客户端请求里携带的Token信息，如果验证成功，就向客户端返回相关的用户信息
 
+#### 10. MybatisPlus代码生成器记录
 
+- 依赖：
 
+  ```xml
+  		<!-- mysql驱动 -->
+          <dependency>
+              <groupId>mysql</groupId>
+              <artifactId>mysql-connector-java</artifactId>
+              <version>8.0.27</version>
+          </dependency>
+          
+  		<!-- springboot整合MybatisPlus -->
+          <dependency>
+              <groupId>com.baomidou</groupId>
+              <artifactId>mybatisplus-spring-boot-starter</artifactId>
+              <version>1.0.5</version>
+          </dependency>
+  
+  		<!-- MyBatisPlus依赖 -->
+          <dependency>
+              <groupId>com.baomidou</groupId>
+              <artifactId>mybatis-plus</artifactId>
+              <version>3.4.3.4</version>
+          </dependency>
+  
+  		<!-- MyBatis代码生成器依赖 -->
+          <dependency>
+              <groupId>com.baomidou</groupId>
+              <artifactId>mybatis-plus-generator</artifactId>
+              <version>3.5.1</version>
+          </dependency>
+  
+  		<!-- MyBatis代码生成器的模板引擎 -->
+          <dependency>
+              <groupId>org.apache.velocity</groupId>
+              <artifactId>velocity-engine-core</artifactId>
+              <version>2.3</version>
+          </dependency>
+  ```
 
+- 具体代码：
+
+  ```java
+  @Test
+      public void tomTest() {
+          //创建一个代码生成器
+          FastAutoGenerator.create("slqUrl",
+                          "root", "root")
+                  //全局配置(GlobalConfig)
+                  .globalConfig(builder -> {
+                      builder.author("Tom") // 设置作者，可以写自己名字
+                              //.enableSwagger() // 开启 swagger 模式，这个是接口文档生成器，如果开启的话，就还需要导入swagger依赖
+                              .fileOverride() // 覆盖已生成文件
+                              .dateType(DateType.TIME_PACK) //时间策略
+                              .commentDate("yyyy-MM-dd") //注释日期
+                              .outputDir("E:\\JavaCode\\TestRBAC\\src\\main\\java"); // 指定输出目录，一般指定到java目录
+                  })
+                  //包配置(PackageConfig)
+                  .packageConfig(builder -> {
+                      builder.parent("com.tom") // 设置父包名
+                              .moduleName("") // 设置父包模块名，这里一般不设置
+                              .pathInfo(Collections.singletonMap(OutputFile.mapperXml, "E:\\JavaCode\\TestRBAC\\src\\main\\resources\\mapper")); // 设置mapperXml生成路径，这里是Mapper配置文件的路径，建议使用绝对路径
+                  })
+                  //策略配置(StrategyConfig)
+                  .strategyConfig(builder -> {
+                      builder.addInclude("r_Menu") // 设置需要生成的表名
+                              .addInclude("t_menu") // 设置需要生成的表名
+                              .addInclude("t_role") // 设置需要生成的表名
+                              .addInclude("t_user") // 设置需要生成的表名
+                              .addTablePrefix("t_") // 设置过滤表前缀
+                              .addTablePrefix("r_"); // 设置过滤表前缀
+  
+                      builder.serviceBuilder()
+                              .formatServiceFileName("%sService") //设置service的命名策略,没有这个配置的话，生成的service和serviceImpl类前面会有一个I，比如IUserService和IUserServiceImpl
+                              .formatServiceImplFileName("%sServiceImpl"); //设置serviceImpl的命名策略
+                      builder.controllerBuilder()
+                              .enableRestStyle(); // 开启生成@RestController 控制器，不配置这个默认是Controller注解，RestController是返回Json字符串的，多用于前后端分离项目。
+                      builder.mapperBuilder()
+                              .enableMapperAnnotation();//开启 @Mapper 注解，也就是在dao接口上添加一个@Mapper注解，这个注解的作用是开启注解模式，就可以在接口的抽象方法上面直接使用@Select和@Insert和@Update和@Delete注解。
+                  })
+  //                .templateEngine(new FreemarkerTemplateEngine()) // 使用Freemarker引擎模板，默认的是Velocity引擎模板
+                  .templateEngine(new VelocityTemplateEngine())
+                  .execute(); //执行以上配置
+      }
+  ```
+
+  
 
 
 
