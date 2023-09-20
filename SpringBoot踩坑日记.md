@@ -177,9 +177,21 @@
       }
   ```
 
+
+#### 11. 多参数规范化泛型
+
+- ```java
+  public class Triple<T1, T2, T3> extends Pair<T1, T2> {
   
+      protected final T3 t3;
+  
+      public T3 getThird(){return t3;}
+  
+      public Triple(T1 iputT1, T2 iputT2, T3 iputT3) {
+          super(iputT1, iputT2);
+          t3 = iputT3;
+      }
+  }
+  ```
 
-
-
-
-
+- 对于出现产生连锁反应的组件，需要一次操作的，则使用继承式泛型封装
