@@ -195,3 +195,30 @@
   ```
 
 - 对于出现产生连锁反应的组件，需要一次操作的，则使用继承式泛型封装
+
+#### 12. SpringBoot自动任务
+
+1. 重写ApplicationRunner接口的run方法--太过简单不多赘述
+2. 重写CommandLineRunner接口的run方法--太过简单不多赘述
+3. 定时器：设置成一分钟一次或者一秒一次，程序启动后也就自动执行了。。。
+
+4. 实现InitializingBean接口，重写afterPropertiesSet方法
+
+   - ```java
+     @Service
+     public class UserService implements InitializingBean {
+         @Resource
+         private UserMapper userMapper;
+      
+         public List<User> getByName() {
+             List<User> userList = userMapper.selectList(null);
+             return userList;
+         }
+      
+         @Override
+         public void afterPropertiesSet() {
+             System.out.println("这里是你要执行的方法捏！");
+         }
+     }
+     ```
+
