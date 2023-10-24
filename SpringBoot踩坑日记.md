@@ -222,3 +222,177 @@
      }
      ```
 
+#### 13. SpringBoot整合WebSocket
+
+- 依赖：
+
+  ```xml
+  <dependency>
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-starter-websocket</artifactId>
+          </dependency>
+  ```
+
+- 配置类：
+
+  ```java
+  @Configuration
+  public class WebSocket {
+  
+      /**
+       * bean注册：会自动扫描带有@ServerEndpoint注解声明的Websocket Endpoint(端点)，注册成为Websocket bean。
+       * 要注意，如果项目使用外置的servlet容器，而不是直接使用springboot内置容器的话，就不要注入ServerEndpointExporter，因为它将由容器自己提供和管理。
+       */
+      @Bean
+      public ServerEndpointExporter serverEndpointExporter() {
+          return new ServerEndpointExporter();
+      }
+  
+  }
+  ```
+
+- **Server实现类：**
+
+  ```java
+  /**
+   * @author: Tom
+   * @date: 2023/10/24 14:10
+   * @description:
+   */
+  @Component
+  // 定义websocket服务器端，它的功能主要是将目前的类定义成一个websocket服务器端。
+  // 注解的值将被用于监听用户连接的终端访问URL地址
+  @ServerEndpoint("/websocket")
+  @Slf4j
+  public class WebSocketServer {
+  
+      //实例一个session，这个session是websocket的session
+      private Session session;
+  
+      //存放websocket的集合（本次demo不会用到，聊天室的demo会用到）
+      private static CopyOnWriteArraySet<WebSocketServer> webSocketSet = new CopyOnWriteArraySet<>();
+  
+      //前端请求时一个websocket时
+      @OnOpen
+      public void onOpen(Session session) {
+          this.session = session;
+          webSocketSet.add(this);
+          log.info("【websocket消息】有新的连接, 总数:{}", webSocketSet.size());
+      }
+  
+      //前端关闭时一个websocket时
+      @OnClose
+      public void onClose() {
+          webSocketSet.remove(this);
+          log.info("【websocket消息】连接断开, 总数:{}", webSocketSet.size());
+      }
+  
+      //前端向后端发送消息
+      @OnMessage
+      public void onMessage(String message) {
+          log.info("【websocket消息】收到客户端发来的消息:{}", message);
+      }
+  
+      //  try-catch 中的那一行是最重要的~
+      public void sendMessage(String message) {
+          for (WebSocketServer webSocketServer: webSocketSet) {
+              log.info("【websocket消息】广播消息, message={}", message);
+              try {
+                  webSocketServer.session.getBasicRemote().sendText(JSON.toJSONString(new TestPojo("tom", 72)));
+              } catch (Exception e) {
+                  e.printStackTrace();
+              }
+          }
+      }
+  }
+  
+  ```
+
+- 前端：
+
+  ```html
+  <body>
+      <div id="message"></div>
+      <input type="button" name="" id="btn" value="开始" />
+  </body>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script type="text/javascript">
+      var websocket = null;
+  
+      //判断当前浏览器是否支持WebSocket
+      if ('WebSocket' in window) {
+          websocket = new WebSocket("ws://localhost:8888/websocket");
+      } else {
+          alert('Not support websocket')
+      }
+  
+      //连接发生错误的回调方法
+      websocket.onerror = function () {
+          setMessageInnerHTML("发生错误");
+      };
+  
+      //连接成功建立的回调方法
+      websocket.onopen = function (event) {
+          setMessageInnerHTML("建立连接");
+      }
+  
+      //接收到消息的回调方法
+      websocket.onmessage = function (event) {
+          console.log(event.data)
+      }
+  
+      //连接关闭的回调方法
+      websocket.onclose = function () {
+          setMessageInnerHTML("关闭连接");
+      }
+  
+      //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+      window.onbeforeunload = function () {
+          alert("已关闭连接");
+          websocket.close();
+      }
+  
+      //将消息显示在网页上
+      function setMessageInnerHTML(innerHTML) {
+          document.getElementById('message').innerHTML += innerHTML + '<br/>';
+      }
+  
+      //关闭连接
+      function closeWebSocket() {
+          alert("已关闭连接");
+          websocket.close();
+      }
+      // 开始
+      // 后端给前端的
+      $("#btn").click(function () {
+          $.ajax({
+              url: "http://localhost:8888/test/send",
+              type: 'post',
+              success: function (HTML) {//返回页面内容
+                  console.log(HTML);
+              }
+          });
+      })
+  </script>
+  ```
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
