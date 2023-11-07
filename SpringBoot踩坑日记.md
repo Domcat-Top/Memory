@@ -200,7 +200,7 @@
 
 1. 重写ApplicationRunner接口的run方法--太过简单不多赘述
 2. 重写CommandLineRunner接口的run方法--太过简单不多赘述
-3. 定时器：设置成一分钟一次或者一秒一次，程序启动后也就自动执行了。。。
+3. 定时器：设置成一分钟一次或者一秒一次，程序启动后也就自动执行了
 
 4. 实现InitializingBean接口，重写afterPropertiesSet方法
 
@@ -376,17 +376,9 @@
   </script>
   ```
 
-  
+#### 14. SpringBoot定时任务（原因不明）
 
-
-
-
-
-
-
-
-
-
+- 当定时任务的@Scheduled注解，添加到Service层方法上，所有的定时任务就都变成了触发式，不能自动执行了，暂时不晓得是什么导致的
 
 
 
