@@ -376,9 +376,36 @@
   </script>
   ```
 
-#### 14. SpringBoot定时任务（原因不明）
+#### 14. SpringBoot定时任务
 
-- 当定时任务的@Scheduled注解，添加到Service层方法上，所有的定时任务就都变成了触发式，不能自动执行了，暂时不晓得是什么导致的
+- 如果执行的定时任务有阻塞行为，需要进行 多线程 定时器任务 的配置
+
+- 代码如下：
+
+  ```java
+  /**
+   * @author: Tom
+   * @date: 2023/11/7 10:28
+   * @description:
+   */
+  @Configuration
+  public class ScheduledConfiguration implements SchedulingConfigurer {
+      @Override
+      public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
+          // 根据自己实际业务来设置线程池的大小，我这里测试的话，设置了三个，具体的业务根据自己的情况来设置。
+          scheduledTaskRegistrar.setScheduler(Executors.newScheduledThreadPool(3));
+      }
+  }
+  ```
+
+- 需要额外在使用的Component类添加异步注解：
+
+  ```java
+  // 启动Spring的异步方法来执行当前的Component
+  @EnableAsync
+  ```
+
+  
 
 
 
