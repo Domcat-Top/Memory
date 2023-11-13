@@ -405,6 +405,61 @@
   @EnableAsync
   ```
 
+
+#### 15. 原生Java获取Http请求JSON数据
+
+- Java：
+
+  ```java
+   /**
+       * Http请求，调取第三方接口，获取到一句话
+       * 获取的是 content 和 name 字段
+       * @return 返回获取到的文案
+       */
+      public static String getWord() {
+          String url = "https://api.xygeng.cn/one";
+          try {
+              URL obj = new URL(url);
+              HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+              // 设置请求方法和请求头
+              con.setRequestMethod("GET");
+              con.setRequestProperty("User-Agent", "Mozilla/5.0");
+              // 读取响应内容
+              BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+              String inputLine;
+              StringBuilder content = new StringBuilder();
+              while ((inputLine = in.readLine()) != null) {
+                  content.append(inputLine);
+              }
+              in.close();
+              JSONObject jsonObject = JSONObject.parseObject(content.toString());
+              JSONObject data = jsonObject.getJSONObject("data");
+              return data.getString("content") + "-- " + data.getString("name");
+          } catch (Exception e) {
+              e.printStackTrace();
+          }
+          return null;
+      }
+  ```
+
+- 该JSON完整结构：
+
+  ```json
+  {
+      "code": 200,
+      "data": {
+          "id": 92,
+          "tag": "网络",
+          "name": "佚名",
+          "origin": "佚名",
+          "content": "我在时间的轨迹上徘徊，踏上每一列经过的车。沿途的风景在渐渐远去，我举着那快叫思念的车牌，等待着最后一站——故乡。",
+          "created_at": "2018-12-23T06:10:47.000Z",
+          "updated_at": "2022-03-09T08:42:10.000Z"
+      },
+      "updateTime": 1699834653198
+  }
+  ```
+
   
 
 
