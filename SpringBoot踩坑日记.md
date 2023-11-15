@@ -460,7 +460,19 @@
   }
   ```
 
-  
+
+#### 16. jar包和war包的启动区别
+
+- **jar包：**执行 SpringBootApplication 的 run 方法，启动 IOC 容器，然后创建嵌入式 Servlet 容器
+- **war包：**先是启动 Servlet 服务器，服务器启动 SpringBoot 应用 （SpringBootServletInitizer），然后启动 IOC 容器
+
+
+
+
+
+
+
+
 
 
 
