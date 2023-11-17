@@ -41,7 +41,20 @@
   unused，抑制与未用的程式码及停用的程式码相关的警告
   ```
 
+### 3. Calendar
 
+- 原生 Java 的 Utils 包下的工具
 
+  ```java
+  // 简单获取当前年份、月份、小时、周几、第几周、一年的第几天等 参数，直接这样使用即可
+  Calendar.YEAR; 
+  // 如果想操作时间的话，即获取一个calendar对象，内置了很多可以操作时间的函数和方法
+  Calendar cal = Calendar.getInstance();
+  // 获取当前时间：格式是国际标准，看起来别扭
+  cal.getTime();
+  // 获取时间戳
+  cal.getTime().getTime();
+  ```
 
+  
 
