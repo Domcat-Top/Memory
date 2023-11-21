@@ -466,11 +466,138 @@
 - **jar包：**执行 SpringBootApplication 的 run 方法，启动 IOC 容器，然后创建嵌入式 Servlet 容器
 - **war包：**先是启动 Servlet 服务器，服务器启动 SpringBoot 应用 （SpringBootServletInitizer），然后启动 IOC 容器
 
+#### 17. Shiro
 
+- 引入依赖：
 
+  ```xml
+  <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-core</artifactId>
+      <version>1.5.3</version>
+  </dependency>
+  ```
 
+- Shiro 配置：
 
+  ```java
+  @Configuration
+  public class ShiroConfig {
+      
+      // 自定义的Realm对象，这个对象是用于操作特定的用户对象的，比如给Shiro分配它的特定权限等
+      @Bean
+      public UserRealm userRealm() {
+          return new UserRealm();
+      }
+      
+      // 把Shiro和UserRealm对象进行关联
+      @Bean
+      public DefaultWebSecurityManager getdefaultWebSecurityManager(@Qualifier("userRealm") UserRealm userRealm){
+          DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+          // 关联userRealm
+          securityManager.setRealm(userRealm);
+          return securityManager;
+   
+      }
+      
+      // 具体的拦截策略，在这里配置
+      @Bean
+      public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("getdefaultWebSecurityManager") DefaultWebSecurityManager defaultWebSecurityManager){
+          ShiroFilterFactoryBean bean = new ShiroFilterFactoryBean();
+          // 设置安全管理器
+          bean.setSecurityManager(defaultWebSecurityManager);
+   
+          // 实现 shiro 的内置过滤器
+          /**
+           * anon: 无需认证就可以访问
+           * authc: 必须认证了才能访问
+           * user: 必须拥有记住我功能才能用
+           * perms: 拥有对某个资源的权限才能访问
+           * role: 拥有某个角色权限
+           */
+   
+          // 拦截
+          Map<String, String> filter = new LinkedHashMap<>();
+   
+          // 授权，正常的情况下，未授权跳转到未授权页面
+          filter.put("/user/add","perms[user:add]");
+          filter.put("/user/update","perms[user:update]");
+   
+          filter.put("/user/*","authc");
+          bean.setFilterChainDefinitionMap(filter);
+   
+          // 设置登录的请求
+          bean.setLoginUrl("/toLogin");
+   
+          // 未授权页面
+          bean.setUnauthorizedUrl("/noauth");
+   
+          return bean;
+      }
+   
+      // **************************这个可以有可无
+      // 整合ShiroDialect： 用来整合 Shiro thymeleaf
+      @Bean
+      public ShiroDialect getShiroDialect() {
+          return new ShiroDialect();
+      }
+  }
+  ```
 
+- 自定义UserRealm类的实现：
+
+  ```java
+  public class UserRealm extends AuthorizingRealm {
+   
+      // Service层，这里需要一些数据库的东西来辅助验证
+      @Autowired
+      UserService userService;
+   
+      // 授权
+      @Override
+      protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection){
+          System.out.println("执行了 => 授权doGetAuthorizationInfo");
+   
+          // SimpleAuthorizationInfo
+          SimpleAuthorizationInfo info =  new SimpleAuthorizationInfo();
+   
+          // 拿到当前登录的这个对象
+          Subject subject = SecurityUtils.getSubject();
+          // 拿到User
+          User currentUser = (User)subject.getPrincipal();
+          // 设置当前用户的权限
+          // 如果存在多个权限，则对字符串进行一个分割，比如按照 ； | 等分隔符进行分割，然后进行addStringPermission
+          info.addStringPermission(currentUser.getPerms());
+   
+          return info;
+      }
+   
+      // 认证
+      @Override
+      protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+          System.out.println("执行了 => 认证doGetAuthorizationInfo");
+   
+          UsernamePasswordToken userToken = (UsernamePasswordToken) token;
+   
+          // 连接真实数据库
+          User user = userService.queryUserByName(userToken.getUsername());
+   
+          // 没有这个人
+          if (user == null){
+              // UnknownAccountException
+              return null;
+          }
+  // 如果是存放在Session中的，也可以这样操作
+  //        Subject currentSubject = SecurityUtils.getSubject();
+  //        Session session = currentSubject.getSession();
+  //        session.setAttribute("loginUser",user);
+   
+          // 可以加密，MD5:e10adc3949ba59abbe56e057f20f883e  MD5:盐值加密
+          // 密码认证，shiro做
+          return new SimpleAuthenticationInfo(user,user.getPassword(),"");
+      }
+  }
+  ```
 
 
 
