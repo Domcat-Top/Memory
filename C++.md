@@ -134,7 +134,229 @@ cout << "" << 999 << endl;
 
 ##### 1.3 结构体
 
+```c++
+struct Student {
+    string name;
+    int age;
+    string gender;
+};
+```
 
+##### 1.4 函数
+
+- 懒得写了。。。没营养
+
+##### 1.5 函数的值传递和地址传递
+
+- 值传递是局部参数，不会影响域外的值
+- 地址传递是直接修改了原本的值，看情况使用
+
+##### 1.6 static关键字
+
+- 可修饰变量和函数
+- 比如static修饰函数中的静态变量，即使这个函数运行结束了，这个变量还在，一直持续到程序结束
+
+#### 2. 面向对象
+
+#### 2.1 类
+
+```c++
+class Person {
+// 一片成员共用一个标签
+public:
+    // 构造函数
+    Person() {
+        cout << "对象被创建啦" << endl;
+    }
+};
+```
+
+- C++的权限访问规则：默认的是private
+  - public：谁都可以访问
+  - private：只有类自己能访问
+  - protected：子类能访问
+
+- 继承、多态、虚函数
+
+  - 一个函数，如果子类想重新实现，就得用虚函数标明
+
+    ```c++
+    class Father {
+    public:
+        // 这个就是虚函数，加了virtual才会有多态
+        virtual void say() {
+            cout << "我是爸爸" << endl;
+        }
+    };
+    ```
+
+- 运算符重载：如下是代码示例
+
+```c++
+#include <iostream>
+using namespace std;
+
+class Point {
+public:
+    int x, y;
+
+    Point(int x_, int y_) {
+        x = x_;
+        y = y_;
+    }
+
+    // 重载 + 号
+    Point operator+(Point &other) {
+        // 新点的x = 自己x + 对方x
+        // 新点的y = 自己y + 对方y
+        return Point(x + other.x, y + other.y);
+    }
+};
+
+int main() {
+    Point p1(1, 2);
+    Point p2(3, 4);
+
+    Point p3 = p1 + p2;  // 等价于 p1.operator+(p2)
+
+    cout << p3.x << " " << p3.y << endl;  // 4 6
+}
+```
+
+- 运算符重载，有 + - * /    还有 ==，这样的话，就类似Java里面的equal比较了，可以自定义比较的内容，回忆起来了吗！
+
+#### 2.2 容器
+
+- vector：就是个ArrayList
+
+  ```c++
+  	vector<int> v;
+  
+      v.push_back(10);    // 尾部添加
+      v.push_back(20);
+      v.push_back(30);
+  ```
+
+  
+
+- string
+
+- map：类似Java的TreeMap，key自动排序
+
+  ```c++
+  #include <map>
+  map<int, string> m;
+  m[1] = "张三";
+  m[2] = "李四";
+  cout << m[1] << endl;   // 张三
+  // 遍历
+  for (auto& pair : m) {
+      cout << pair.first << ": " << pair.second << endl;
+  }
+  ```
+
+- set：Java的TreeSet，可以自动去重 + 排序
+
+  ```c++
+  #include <set>
+  
+  set<int> st;
+  st.insert(3);
+  st.insert(1);
+  st.insert(2);
+  st.insert(3);   // 重复，自动忽略
+  ```
+
+- list：类似LinkedList，双向链表
+
+  ```c++
+  	list<int> lst;
+      // 增
+      lst.push_back(10);    // 尾插
+      lst.push_front(20);   // 头插
+      lst.push_back(30);
+      // 遍历（不能用 []！）
+      cout << "遍历：";
+      for (int x : lst) {
+          cout << x << " ";   // 20 10 30
+      }
+      cout << endl;
+      // 删
+      lst.pop_front();   // 删头
+      lst.pop_back();    // 删尾
+  ```
+
+#### 2.3 常用的几个算法
+
+- sort：
+
+```c++
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    vector<int> v = {3,1,4,1,5};
+    
+    sort(v.begin(), v.end());  // 排序
+    
+    for(int x : v) cout << x << " "; 
+    // 输出：1 1 3 4 5
+    
+    // 从大到小排序
+    sort(v.begin(), v.end(), greater<int>());
+}
+```
+
+- find：查找元素
+
+  - 在容器中查找某个值，找不到返回end()
+
+  ```c++
+  vector<int> v = {3,1,4};
+  auto it = find(v.begin(), v.end(), 4);
+  if(it != v.end()){
+      cout << "找到了：" << *it;
+  } else {
+      cout << "没找到";
+  }
+  ```
+
+  - reverse：反转（倒序）
+
+    ```c++
+    vector<int> v = {1,2,3};
+    reverse(v.begin(), v.end());
+    // 变成：3 2 1
+    
+    string s = "hello";
+    reverse(s.begin(), s.end());
+    // s 变成 "olleh"
+    ```
+
+#### 2.4 头文件相关
+
+- 尖括号还是双引号：
+  - 尖括号是系统自带的库
+  - 双引号是找自己写的文件
+- 头文件格式：
+
+```c++
+// Student.h
+#ifndef STUDENT_H    // 固定开头，防止重复包含--AI解释的很好，忘记了直接问AI
+#define STUDENT_H
+
+#include <iostream>
+#include <string>
+using namespace std;
+// 你的类写在这里
+class Student {
+public:
+    string name;
+};
+#endif // STUDENT_H   // 固定结尾
+```
 
 
 
